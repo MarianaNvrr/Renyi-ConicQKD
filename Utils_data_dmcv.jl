@@ -4,7 +4,7 @@ function optimal_amp(f::Real,L::Integer)
     if f != 1.0
         @warn("Only f = 1.0 is supported for the optimal amplitudes")
     end
-
+    
     optimal_amp = [1.07, 1.05, 1.03, 1.01, 0.99, 0.96, 
                         0.93, 0.90, 0.87, 0.85, 0.85, 
                         0.85, 0.84, 0.84, 0.84, 0.84,
@@ -23,16 +23,18 @@ function optimal_amp(f::Real,L::Integer)
 end
 
 
-
-
-
 function optimal_pK(f::Real,N::Real,L::Integer)
 
     if f != 1.0
         @warn("Only f = 1.0 is currently supported for the optimal pK")
     end
 
-    if N == 1e10
+    if N> 1e10
+        optimal_pK = [0.94, 0.94, 0.94, 0.94, 0.94, 0.89,
+                            0.89, 0.89, 0.89, 0.89, 0.89, 0.84,
+                            0.84, 0.84, 0.79, 0.79, 0.79, 0.79,
+                            0.79, 0.79, 0.79, 0.79, 0.79]
+    elseif N == 1e10
         optimal_pK = [0.90, 0.90, 0.90, 0.90, 0.90, 0.90,
                             0.90, 0.90, 0.90, 0.90, 0.90,
                             0.87, 0.87, 0.87, 0.87, 0.85,
@@ -41,6 +43,7 @@ function optimal_pK(f::Real,N::Real,L::Integer)
                             0.80, 0.80, 0.80, 0.75, 0.75,
                             0.75, 0.75, 0.75, 0.70, 0.70,
                             0.70, 0.70, 0.70, 0.70, 0.70]
+        return L < length(optimal_pK) ? optimal_pK[L+1] : optimal_pK[end]
     elseif N == 1e9
         optimal_pK = [0.85, 0.85, 0.85, 0.85, 0.85, 0.85,
                             0.85, 0.80, 0.80, 0.80, 0.80,
@@ -57,18 +60,10 @@ function optimal_pK(f::Real,N::Real,L::Integer)
                             0.60, 0.60, 0.55, 0.55, 0.55,
                             0.50, 0.50, 0.45, 0.45, 0.45,
                             0.45, 0.45, 0.45, 0.45]
-    elseif N == 1e7
+    else # Default to N = 1e7
         optimal_pK = [0.50, 0.50, 0.50, 0.50, 0.50, 0.50,
                             0.50, 0.50, 0.45, 0.45, 0.45,
                             0.40, 0.40, 0.35, 0.33, 0.30]
-    elseif N == 5e6
-        optimal_pK = [0.42, 0.42, 0.42, 0.42, 0.42, 0.42,
-                            0.40, 0.40, 0.38, 0.38, 0.36,
-                            0.32, 0.30, 0.28, 0.26, 0.24]
-    else # Default to N = 3e6
-        optimal_pK = [0.39, 0.39, 0.39, 0.37, 0.37, 0.37,
-                            0.37, 0.36, 0.35, 0.34, 0.30,
-                            0.28, 0.28]
     end
 
     return L < length(optimal_pK) ? optimal_pK[L+1] : optimal_pK[end]
@@ -80,8 +75,12 @@ function optimal_renyi(f::Real,N::Real,L::Integer)
     if f != 1.0
         @warn("Only f = 1.0 is currently supported for the optimal Rényi parameter")
     end
-
-    if N == 1e10
+    if N>1e10
+        optimal_renyi = [1.00, 1.26, 2.14, 2.49, 3.14, 3.45,
+                            3.65, 4.17, 4.48, 4.73, 4.85, 4.95,
+                            5.32, 5.40, 5.64, 5.79, 5.79, 5.79,
+                            5.79, 5.79, 5.79, 5.79, 5.79]*1e-6
+    elseif N == 1e10
         optimal_renyi = [0.6, 0.20, 0.55, 0.40, 5.58, 0.95, 
                             1.05, 0.60, 1.00, 1.00, 1.20, 
                             1.15, 1.15, 1.00, 1.15, 1.20, 
@@ -112,21 +111,9 @@ function optimal_renyi(f::Real,N::Real,L::Integer)
     elseif N == 1e7
         optimal_renyi = [3.96, 3.96, 4.53, 4.79, 5.21, 5.29,
                             5.77, 6.13, 7.33, 8.05, 8.10,
-                            9.97, 11.9, 13.1, 14.8, 15.0,
-                            15.0, 15.0, 13.4, 13.4]*1e-4
+                            9.97, 11.9, 13.1, 14.8, 15.0]*1e-4
             return L < length(optimal_renyi) ? optimal_renyi[L+1] : optimal_renyi[end]
-    elseif N == 5e6
-        optimal_renyi = [5.40, 5.40, 5.40, 6.36, 6.36, 6.98,
-                            6.98, 8.11, 8.11, 10.1, 10.1, 
-                            13.3, 13.3, 16.7, 16.7, 19.8]*1e-4
-            return L < length(optimal_renyi) ? optimal_renyi[L+1] : optimal_renyi[end]
-    elseif N == 3e6
-        optimal_renyi = [0.96, 0.96, 0.96, 1.13, 1.11, 1.17,
-                            1.17, 1.42, 1.42, 1.66, 1.66,
-                            2.12, 2.21]*1e-3
-            return L < length(optimal_renyi) ? optimal_renyi[L+1] : optimal_renyi[end]
-
     else # If there's no data, return 0 (i.e. perform the optimization via Optim)
-        return 0.0
+        return 0
     end
 end
