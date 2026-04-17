@@ -411,7 +411,7 @@ function Instance_bb84(f::Real, N::Real, v::Real, ::Type{T}; fast::Bool = true, 
     v = T(v)
     
     # Create output file
-    RATE_BB84 = "ConicQKD2/examples/rebutal/Var3_bb84Rate_bb84_f" * string(f) * "_N1e" * string(count(==('0'), string(Int(N)))) * ".csv"
+    RATE_BB84 = "OptRate_bb84_f" * string(f) * "_N1e" * string(count(==('0'), string(Int(N)))) * ".csv"
     file = open(RATE_BB84, "a")
     @printf(file, "f, N, nu \n")
     @printf(file, "%.2f, %.2f, %.2f \n", f, log10(N), v)
