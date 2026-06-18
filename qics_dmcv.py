@@ -26,9 +26,9 @@ def hbe_dmcv_qics(G_kraus, Z_kraus, bases_AB, alice_amp, p_sim, pK, alpha, eps, 
 
     # * Rényi cone constraint
 
-    Id = np.eye(dim_out)
+    Id = np.eye(dim_out) / dim_out
     def Gmap(X):
-        return (1 - eps) * G_kraus @ X @ G_kraus.conj().T + eps * Id
+        return (1 - eps) * G_kraus @ X @ G_kraus.conj().T + eps * Id * np.trace(X)
 
     def Zmap(X):
         Z = np.zeros_like(Z_kraus[0], dtype=np.complex128)
