@@ -421,7 +421,7 @@ function Instance_bb84(f::Real, N::Real, v::Real, ::Type{T}; fast::Bool = true, 
     # Start main loop
     for dB ∈ 0:2:50# CHANGE accordingly
         @printf("Transmittance: %d ---------\n", dB)
-        pK = T(optimal_pK(N,dB, variable))
+        pK = T(optimal_pK(f,N,dB, variable))
         α = optimal_renyi(N,dB,variable)
         SKR, optimal_α, leak_EC, dual = Finite_SKR(dB, N, v, pK, f, α; fast, variable)
 
@@ -434,4 +434,5 @@ end
 
 # Example values
 # f=1.16; v = 0.97; N=1e9; T=Float64; fast = true; variable=true
+# Instance_bb84(f,N,v,T)
 
