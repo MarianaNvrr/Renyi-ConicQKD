@@ -1,4 +1,4 @@
-function optimal_pK(N::Real,dB::Integer, variable::Bool)
+function optimal_pK(f::Real,N::Real,dB::Integer, variable::Bool)
 
     if f != 1.16
         @warn ("Only f = 1.16 is currently supported for the optimal pK")
