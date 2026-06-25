@@ -356,14 +356,14 @@ function Finite_SKR(
     qZ = qberZ(v, η, pK)
     leak_EC = EC_cost_bb84(qZ, η, f, pK,ϵEC,N)
     α_low = T(1 + 1e-7);α_high = T(1.5)
-    optimal_renyi = α
+    opt_renyi = α
     if variable 
         println("Initiating variable-length optimization")
-        if optimal_renyi == 1.
+        if opt_renyi == 1.
             println("Optimizing α...")
             obj = αrenyi -> -VariableLengthOBJ(αrenyi, pK, v, η, ϵPA, N)
             sol = Optim.optimize(obj, α_low, α_high, Brent())
-            optimal_renyi =sol.minimizer[1]
+            opt_renyi =sol.minimizer[1]
             h_renyi = -sol.minimum
         else
             h_renyi = VariableLengthOBJ(α, pK,v, η, ϵPA,N)
@@ -374,14 +374,14 @@ function Finite_SKR(
             leak_EC = EC_cost_bb84(qZ, η, f, pK,1.,N)
             obj = αrenyi -> -(FixedLenghtOBJ(αrenyi, v, η, N, pK, T(1.0); fast) - Finite_corrections(αrenyi, ϵPA) / N)
             sol = Optim.optimize(obj, α_low, α_high, Brent())
-            optimal_renyi = sol.minimizer[1]
+            opt_renyi = sol.minimizer[1]
         else
             println("Initiating fixed-length optimization in the finite-size regime")
             if α==1.
             #  Optimization of α parameter 
             obj = αrenyi -> -(FixedLenghtOBJ(αrenyi, v, η, N, pK, ϵcompPE; fast) - Finite_corrections(αrenyi, ϵPA) / N)
             sol = Optim.optimize(obj, α_low, α_high, Brent())
-            optimal_renyi = sol.minimizer[1]
+            opt_renyi = sol.minimizer[1]
             h_renyi = -sol.minimum
             else
                 h_renyi = FixedLenghtOBJ(α, v, η, N, pK, ϵcompPE; fast) - Finite_corrections(α, ϵPA) / N
@@ -389,8 +389,8 @@ function Finite_SKR(
         end
     end
     SKR_Max = h_renyi - leak_EC
-    @printf("Optimum found for α-1 = %.5e giving a key rate of SKR = %.2e \n", optimal_renyi - 1, SKR_Max)
-    return SKR_Max, optimal_renyi, leak_EC, h_renyi
+    @printf("Optimum found for α-1 = %.5e giving a key rate of SKR = %.2e \n", opt_renyi - 1, SKR_Max)
+    return SKR_Max, opt_renyi, leak_EC, h_renyi
 end
 
 "Variable-length objective function"
